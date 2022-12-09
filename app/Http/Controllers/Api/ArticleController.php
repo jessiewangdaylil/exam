@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Models\Article;
 use Illuminate\Http\Request;
 
 //請完成下方所有方法的實作，並撰寫對應的路由，用 Postman 來進行測試
@@ -15,7 +16,8 @@ class ArticleController extends Controller
      */
     public function index()
     {
-        //
+
+        $articles = Article::select('sort')->orderBy('sort', 'asc')->get();
     }
 
     /**
@@ -26,7 +28,7 @@ class ArticleController extends Controller
      */
     public function store(Request $request)
     {
-        //
+
     }
 
     /**
@@ -49,7 +51,7 @@ class ArticleController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $article = Article::find($id);
     }
 
     /**
@@ -60,12 +62,13 @@ class ArticleController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $article->delete($id);
     }
 
     //查詢所有資料，只取 id , subject 以及 content 這三個欄位
     public function querySelect()
     {
+        $article = Article::select(['id', 'subject', 'content'])->get();
 
     }
 
@@ -73,16 +76,21 @@ class ArticleController extends Controller
     public function querySpecific()
     {
 
+        $date = Carbon::createFromFormat('Y-m-d h:i:s', '2022-12-13 00:00:00');
+        $articles = Article::where('enabled_at', '>', $date)->orderBy('created_at', 'desc')->first();
+
     }
 
     //查詢 enabled_at 於 2022/12/10 00:00:00 之後，enabled 為 true 的資料，按照 created_at 從新到舊排序，回傳第2~4筆資料
     public function queryPagination()
     {
+        $date = Carbon::createFromFormat('Y-m-d h:i:s', '2022-12-10 00:00:00');
+        $articles = Article::where('enabled', true)->orderBy('created_at', 'desc')->take(6)->skip(2)->get();
 
     }
 
     //查詢 enabled_at 介於 2022/12/10 00:00:00 和 2022/12/15 23:59:59 之間，sort 位於 $min 到 $max 之間的資料並回傳
-    public function queryRange($min,$max)
+    public function queryRange($min, $max)
     {
 
     }
