@@ -1,7 +1,10 @@
 <?php
 
+<<<<<<< HEAD
 use App\Models\Cgy;
 use App\Models\Article;
+=======
+>>>>>>> c1918d053998aefaa6ff35b89b00db29b7ab7658
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\SiteController;
 
@@ -22,6 +25,7 @@ Route::get('/', function () {
 
 
 
+<<<<<<< HEAD
 
 
 Route::prefix('/users')->group(function(){
@@ -113,3 +117,5 @@ Route::get('/pluck',function(){
     $data = Cgy::pluck('subject','id');
     return $data;
 });
+=======
+>>>>>>> c1918d053998aefaa6ff35b89b00db29b7ab7658
