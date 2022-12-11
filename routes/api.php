@@ -14,8 +14,19 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-// Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-//     return $request->user();
-// });
+Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
+    return $request->user();
+});
 
-// Route::apiResource('articles','App\Http\Controllers\Api\ArticleController');
+Route::apiResource('articles','App\Http\Controllers\Api\ArticleController');
+
+Route::namespace('App\Http\Controllers\Api')->group(function () {
+
+    Route::get('querySelect','ArticleController@querySelect');
+    Route::get('querySpecific','ArticleController@querySpecific');
+    Route::get('queryPagination','ArticleController@queryPagination');
+    Route::get('queryRange/{min}/{max}','ArticleController@queryRange');
+    Route::get('queryByCgy/{cgy_id}','ArticleController@queryByCgy')->where(array('cgy_id' => '[0-9]+'));
+    Route::get('queryPluck','ArticleController@queryPluck');
+    Route::get('enabledCount','ArticleController@enabledCount');
+});
