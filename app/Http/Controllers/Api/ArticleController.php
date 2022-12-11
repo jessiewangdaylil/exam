@@ -56,8 +56,14 @@ class ArticleController extends Controller
     public function update(Request $request, $id)
     {
         $article = Article::find($id);
-
-        return redirect('show');
+        $article ->subject=$request['subject'];
+        $article ->content=$request['content'];
+        $article ->enabled_at=$request['enabled_at'];
+        $article ->sort=$request['sort'];
+        $article ->enabled=$request['enabled'];
+        $article ->cgy_id=$request['cgy_id'];
+        $article ->save();
+        //  return redirect('/');
     }
 
     /**
