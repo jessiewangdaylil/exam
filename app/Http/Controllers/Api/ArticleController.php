@@ -30,8 +30,10 @@ class ArticleController extends Controller
      */
     public function store(Request $request)
     {
-        Article::create($request->all());
+      $article = Article::create($request->all());
+       return $article;
         // return redirect('index');
+
     }
 
     /**
@@ -44,6 +46,7 @@ class ArticleController extends Controller
     {
        $article = Article::find($id);
        dd($article);
+       return $article;
     }
 
     /**
@@ -55,6 +58,7 @@ class ArticleController extends Controller
      */
     public function update(Request $request, $id)
     {
+        //$article = $article->update($request->only(['subject','content','enabled_at','sort','enabled','cgy_id']));
         $article = Article::find($id);
         $article ->subject=$request['subject'];
         $article ->content=$request['content'];
@@ -63,6 +67,7 @@ class ArticleController extends Controller
         $article ->enabled=$request['enabled'];
         $article ->cgy_id=$request['cgy_id'];
         $article ->save();
+        return $article;
         //  return redirect('/');
     }
 
@@ -74,9 +79,9 @@ class ArticleController extends Controller
      */
     public function destroy($id)
     {
-        return $id;
+         $num = Article::destroy($id);
         Article::findOrFail($id);
-        return 'Success';
+        return  $num.'Delete Successfully';
     }
 
     //查詢所有資料，只取 id , subject 以及 content 這三個欄位
@@ -84,6 +89,7 @@ class ArticleController extends Controller
     {
          $articles = Article::select(['id', 'subject', 'content'])->get();
          dd($articles);
+        return $articles;
          //  echo "<pre>";
         //  var_dump($articles);
         //  die();
@@ -94,8 +100,10 @@ class ArticleController extends Controller
     {
 
         $date = Carbon::createFromFormat('Y-m-d H:i:s', '2022-12-13 00:00:00');
-        $articles = Article::where('enabled_at', '>', $date)->orderBy('created_at', 'desc')->first();
-         dd($articles);
+        $article = Article::where('enabled_at', '>', $date)->where('enabled', true)->orderBy('created_at', 'desc')->first();//單數
+         dd($article->subject);
+         return $article;
+
     }
 
     //查詢 enabled_at 於 2022/12/10 00:00:00 之後，enabled 為 true 的資料，按照 created_at 從新到舊排序，回傳第2~4筆資料
@@ -104,6 +112,7 @@ class ArticleController extends Controller
         $date = Carbon::createFromFormat('Y-m-d H:i:s', '2022-12-10 00:00:00');
         $articles = Article::where('enabled_at', '>', $date)->where('enabled', true)->orderBy('created_at', 'desc')->take(4)->get()->skip(1);
          dd($articles);
+         return $articles;
     }
 
     //查詢 enabled_at 介於 2022/12/10 00:00:00 和 2022/12/15 23:59:59 之間，sort 位於 $min 到 $max 之間的資料並回傳
@@ -112,7 +121,8 @@ class ArticleController extends Controller
         $date_s = Carbon::createFromFormat('Y-m-d H:i:s', '2022-12-10 00:00:00');
         $date_e = Carbon::createFromFormat('Y-m-d H:i:s', '2022-12-15 23:59:59');
         $articles = Article::wherebetween('enabled_at', [$date_s,$date_e])->wherebetween('sort', [$min,$max])->get();
-         dd($articles);
+        dd($articles);
+        return $articles;
     }
 
     //根據所傳入的分類id，取出該分類所有 enabled 為 true 的資料，依照 sort 從小到大排序，回傳符合的資料
@@ -121,13 +131,15 @@ class ArticleController extends Controller
 
       $articles =Article::where('cgy_id',$cgy_id)->where('enabled',true)->orderby('sort','asc')->get();
        dd($articles);
+       return $articles;
     }
 
     //試著使用 pluck() 來取得 id 為 key ， subject 為 value 的陣列
     public function queryPluck()
     {
-      $articles=Article::pluck('id','subject');
+      $articles=Article::pluck('subject','id');
       dd($articles);
+      return $articles;
     }
 
     //計算所有 enabled 為 true 的資料筆數後回傳，利用查詢方法 count()
@@ -135,5 +147,6 @@ class ArticleController extends Controller
     {
       $articles=Article::where('enabled',true)->get();
       dd(count($articles));
+      return count($articles);
     }
 }

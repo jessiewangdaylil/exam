@@ -20,7 +20,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::apiResource('articles','App\Http\Controllers\Api\ArticleController');
 
-Route::namespace('App\Http\Controllers\Api')->group(function () {
+Route::namespace('App\Http\Controllers\Api')->prefix('articles/query')->group(function () {
 
     Route::get('querySelect','ArticleController@querySelect');
     Route::get('querySpecific','ArticleController@querySpecific');
